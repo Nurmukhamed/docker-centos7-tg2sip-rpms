@@ -1,0 +1,21 @@
+# Downloaded from https://raw.githubusercontent.com/hectorvent/tg2sip/master/tg2sip.service
+#
+[Unit]
+Description=Tg2SIP Gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/lib/tg2sip
+Environment=TG2SIP_STANDARD_FOLDER=YES
+ExecStart=/usr/bin/tg2sip
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutStartSec=0
+KillMode=process
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target
