@@ -11,30 +11,6 @@ Source1:        v1.9.2.tar.gz
 
 BuildRequires:       devtoolset-7-gcc
 BuildRequires:       devtoolset-7-gcc-c++
-BuildRequires:       make
-BuildRequires:       git
-BuildRequires:       wget
-BuildRequires:       zlib-devel
-BuildRequires:       openssl-devel
-BuildRequires:       gperf
-BuildRequires:       pkgconfig
-BuildRequires:       ccache
-BuildRequires:       gperf
-BuildRequires:       unzip 
-BuildRequires:       libpng-devel
-BuildRequires:       libjpeg-devel
-BuildRequires:       epel-release
-BuildRequires:       opus-devel
-BuildRequires:       patchelf
-BuildRequires:       td-devel
-BuildRequires:       td
-
-Requires: zlib-devel
-Requires: openssl-devel
-Requires: libpng-devel
-Requires: libjpeg-devel
-Requires: opus-devel
-Requires: td-devel
 
 %description
 Very fast, header-only/compiled, C++ logging library.

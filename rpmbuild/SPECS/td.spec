@@ -28,11 +28,11 @@ BuildRequires:  opus-devel
 BuildRequires:  patchelf
 BuildRequires:  rsync
 
-Requires:       zlib-devel
-Requires:       openssl-devel
-Requires:       libpng-devel
-Requires:       libjpeg-devel
-Requires:       opus-devel
+Requires:       zlib
+Requires:       openssl
+Requires:       libpng
+Requires:       libjpeg
+Requires:       opus
 
 %description
 TDLib (Telegram Database library) is a cross-platform library for building Telegram clients. It can be easily used from almost any programming language.
@@ -46,6 +46,8 @@ Requires:       %{name} = %{version}-%{release}
 This package contains headers and libraries required to build applications that use the TDLib.
 
 %prep
+source /opt/rh/devtoolset-7/enable
+
 rm -rf %{_builddir}
 mkdir -p %{_builddir}%{_prefix}
 cd %{_builddir}
@@ -57,10 +59,10 @@ cd %{name}-%{version}
 mkdir build
 
 %build
-
+source /opt/rh/devtoolset-7/enable
 cd %{_builddir}/%{name}-%{version}/build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_builddir}%{_prefix} ..
-cmake --build . --target install
+%{_builddir}%{_bindir}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_builddir}%{_prefix} ..
+%{_builddir}%{_bindir}/cmake --build . --target install
 
 %install
 rm -rf %{buildroot}
@@ -90,3 +92,5 @@ rsync -avz %{_builddir}%{_prefix}/include/ %{buildroot}%{_includedir}/
 %{_libdir}/cmake/Td/*.cmake
 
 %changelog
+* Tue Mar 29 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.8.0-1
+- Initial spec file

@@ -9,7 +9,7 @@ Summary:       Free and open source multimedia communication library
 License:       GPL-2.0
 Group:         Applications/Communications
 Url:           http://www.pjsip.org
-Source0:       %{name}-%{version}.tar.gz
+Source0:       %{version}.tar.gz
 BuildRequires: gcc-c++ openssl-devel alsa-lib-devel
 
 %package devel
