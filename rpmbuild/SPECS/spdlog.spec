@@ -16,6 +16,8 @@ BuildRequires:       devtoolset-7-gcc-c++
 Very fast, header-only/compiled, C++ logging library.
 
 %prep
+source /opt/rh/devtoolset-7/enable
+
 rm -rf %{_builddir}
 mkdir -p %{_builddir}/usr
 
@@ -24,12 +26,12 @@ cp %{SOURCE0} .
 sh %{SOURCE0} --prefix=%{_builddir}/usr --exclude-subdir
 
 cd %{_builddir}
-tar zxvf %{SOURCE1}
+tar zxf %{SOURCE1}
 cd spdlog-1.9.2
 mkdir build
 
 %build
-sh %{SOURCE0} --prefix=%{_builddir}/usr --exclude-subdir
+source /opt/rh/devtoolset-7/enable
 
 cd %{_builddir}/spdlog-1.9.2/build
 cmake -DCMAKE_BUILD_TYPE=Release -DSPDLOG_BUILD_EXAMPLES=OFF -DSPDLOG_BUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=%{_builddir}/%{_prefix} ..
@@ -49,8 +51,8 @@ rm -rf %{buildroot}
 %{__install} -d %{buildroot}%{_includedir}spdlog/fmt/bundled
 %{__install} -d %{buildroot}%{_includedir}spdlog/sinks
 
-rsync -avz %{_builddir}%{_libdir}/ %{buildroot}%{_libdir}/
-rsync -avz %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
+rsync -az %{_builddir}%{_libdir}/ %{buildroot}%{_libdir}/
+rsync -az %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
 
 %files
 %defattr(-,root,root,-)
@@ -66,3 +68,8 @@ rsync -avz %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
 %{_libdir}/cmake/spdlog/*.cmake
 
 %changelog
+* Thu Mar 31 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.9.2-1
+- source to use devtoolset-7
+- less output from rsync, tar command
+* Tue Mar 29 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.9.2-1
+- Initial spec file

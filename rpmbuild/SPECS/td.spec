@@ -54,7 +54,7 @@ cd %{_builddir}
 cp %{SOURCE0} .
 sh %{SOURCE0} --prefix=%{_builddir}%{_prefix} --exclude-subdir
 
-tar zxvf %{SOURCE1} 
+tar zxf %{SOURCE1} 
 cd %{name}-%{version}
 mkdir build
 
@@ -75,22 +75,25 @@ rm -rf %{buildroot}
 %{__install} -d %{buildroot}%{_includedir}td/telegram
 %{__install} -d %{buildroot}%{_includedir}td/tl
 
-rsync -avz %{_builddir}%{_prefix}/lib/ %{buildroot}%{_libdir}/
-rsync -avz %{_builddir}%{_prefix}/include/ %{buildroot}%{_includedir}/
+rsync -az %{_builddir}%{_prefix}/lib/ %{buildroot}%{_prefix}/lib/
+rsync -az %{_builddir}%{_prefix}/include/ %{buildroot}%{_includedir}/
 
 %files
 %defattr(-,root,root,-)
+%{_prefix}/lib/*.so.*
 %doc
-%{_libdir}/*.so.*
 %files devel
 %defattr(-,root,root,-)
-%doc
 %{_includedir}/%{name}
-%{_libdir}/*.a
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
-%{_libdir}/cmake/Td/*.cmake
+%{_prefix}/lib/*.a
+%{_prefix}/lib/*.so
+%{_prefix}/lib/pkgconfig/*.pc
+%{_prefix}/lib/cmake/Td/*.cmake
+%doc
 
 %changelog
+* Thu Mar 31 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.8.0-1
+- libdir changed from lib64 to lib
+- less output from rsync, tar command
 * Tue Mar 29 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.8.0-1
 - Initial spec file

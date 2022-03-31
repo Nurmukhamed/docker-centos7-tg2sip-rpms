@@ -54,6 +54,8 @@ Provides:	user(tg2sip)
 TG2SIP is a Telegram<->SIP voice gateway. It can be used to forward incoming telegram calls to your SIP PBX or make SIP->Telegram calls.
 
 %prep
+source /opt/rh/devtoolset-7/enable
+
 rm -rf %{_builddir}
 mkdir -p %{_builddir}/usr/src
 cd %{_builddir}/usr/src
@@ -61,13 +63,18 @@ cd %{_builddir}/usr/src
 cp %{SOURCE0} .
 sh %{SOURCE0} --prefix=%{_builddir}/usr --exclude-subdir
 
-tar zxvf %{SOURCE1}
+tar zxf %{SOURCE1}
 cd %{name}-%{version}
-rm CMakeLists.txt
-cp %{SOURCE2} .
+
+# fixing package versions
+sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.0 REQUIRED)%" CMakeLists.txt
+sed -i "s%find_package(spdlog 0.17 REQUIRED)%find_package(spdlog 1.9.2 REQUIRED)%" CMakeLists.txt
+sed -i "s%find_package(spdlog 0.17)%find_package(spdlog 1.9.2)%" ./libtgvoip/CMakeLists.txt
+
 mkdir build
 
 %build
+source /opt/rh/devtoolset-7/enable
 
 cd %{_builddir}/usr/src/%{name}-%{version}/build
 cmake -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_CIMG=0 ..
@@ -112,3 +119,8 @@ fi
 %attr(755,%{name},%{name}) /lib/systemd/system/%{name}.service
 
 %changelog
+* Thu Mar 31 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.3.0-1
+- source to use devtoolset-7
+- less output from rsync, tar command
+* Tue Mar 29 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.3.0-1
+- Initial spec file

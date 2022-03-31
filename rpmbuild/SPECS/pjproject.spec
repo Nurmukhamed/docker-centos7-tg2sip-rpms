@@ -3,7 +3,7 @@
 #
 
 Name:          pjproject
-Version:       2.12
+Version:       2.9
 Release:       1
 Summary:       Free and open source multimedia communication library
 License:       GPL-2.0
