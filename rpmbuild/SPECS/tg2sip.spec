@@ -10,6 +10,7 @@ Source0:        cmake-3.22.3-linux-x86_64.sh
 Source1:        v1.3.0.tar.gz
 Source2:        CMakeLists.txt
 Source3:        tg2sip.service
+Source4:        logging.h
 
 BuildRequires:       devtoolset-7-gcc
 BuildRequires:       devtoolset-7-gcc-c++
@@ -67,18 +68,22 @@ tar zxf %{SOURCE1}
 cd %{name}-%{version}
 
 # fixing package versions
-sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.0 REQUIRED)%" CMakeLists.txt
+sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.2 REQUIRED)%" CMakeLists.txt
 sed -i "s%find_package(spdlog 0.17 REQUIRED)%find_package(spdlog 1.9.2 REQUIRED)%" CMakeLists.txt
 sed -i "s%find_package(spdlog 0.17)%find_package(spdlog 1.9.2)%" ./libtgvoip/CMakeLists.txt
 
+cd tg2sip
+cp %{SOURCE4} .
+cat logging.h
+cd ..
 mkdir build
 
 %build
 source /opt/rh/devtoolset-7/enable
 
 cd %{_builddir}/usr/src/%{name}-%{version}/build
-cmake -DCMAKE_BUILD_TYPE=Release -DUSE_SYSTEM_CIMG=0 ..
-cmake --build .
+%{_builddir}%{_bindir}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_builddir}%{_prefix} ..
+%{_builddir}%{_bindir}/cmake --build . -j $(grep -c ^processor /proc/cpuinfo)
 
 rm -rf %{buildroot}
 

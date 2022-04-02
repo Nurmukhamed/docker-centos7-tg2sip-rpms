@@ -36,20 +36,22 @@ source /opt/rh/devtoolset-7/enable
 cd %{_builddir}/spdlog-1.9.2/build
 cmake -DCMAKE_BUILD_TYPE=Release -DSPDLOG_BUILD_EXAMPLES=OFF -DSPDLOG_BUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=%{_builddir}/%{_prefix} ..
 cmake --build . --target install
+#find %{_builddir}%{_libdir} -type f
+#find %{_builddir}%{_includedir} -type f
 
 %install
 rm -rf %{buildroot}
 %{__install} -d %{buildroot}%{_libdir}
-%{__install} -d %{buildroot}%{_libdir}pkgconfig
-%{__install} -d %{buildroot}%{_libdir}cmake/spdlog
+%{__install} -d %{buildroot}%{_libdir}/pkgconfig
+%{__install} -d %{buildroot}%{_libdir}/cmake/spdlog
 
 %{__install} -d %{buildroot}%{_includedir}
-%{__install} -d %{buildroot}%{_includedir}spdlog
-%{__install} -d %{buildroot}%{_includedir}spdlog/cfg
-%{__install} -d %{buildroot}%{_includedir}spdlog/details
-%{__install} -d %{buildroot}%{_includedir}spdlog/fmt
-%{__install} -d %{buildroot}%{_includedir}spdlog/fmt/bundled
-%{__install} -d %{buildroot}%{_includedir}spdlog/sinks
+%{__install} -d %{buildroot}%{_includedir}/spdlog
+%{__install} -d %{buildroot}%{_includedir}/spdlog/cfg
+%{__install} -d %{buildroot}%{_includedir}/spdlog/sinks
+%{__install} -d %{buildroot}%{_includedir}/spdlog/details
+%{__install} -d %{buildroot}%{_includedir}/spdlog/fmt
+%{__install} -d %{buildroot}%{_includedir}/spdlog/fmt/bundled
 
 rsync -az %{_builddir}%{_libdir}/ %{buildroot}%{_libdir}/
 rsync -az %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
@@ -59,10 +61,10 @@ rsync -az %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
 %doc
 %{_includedir}/spdlog/*.h
 %{_includedir}/spdlog/cfg/*.h
+%{_includedir}/spdlog/sinks/*.h
 %{_includedir}/spdlog/details/*.h
 %{_includedir}/spdlog/fmt/*.h
 %{_includedir}/spdlog/fmt/bundled/*.h
-%{_includedir}/spdlog/sinks/*.h
 %{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/cmake/spdlog/*.cmake

@@ -5,9 +5,7 @@ Summary:        TDLib (Telegram Database library) is a cross-platform library fo
 
 License:        GPL-2.0 License
 ExclusiveArch:  x86_64
-URL:            https://github.com/Infactum/tg2sip
-Source0:        cmake-3.22.3-linux-x86_64.sh
-Source1:        v1.8.0.tar.gz
+URL:            https://github.com/tdlib/td.git
 
 BuildRequires:  devtoolset-7-gcc
 BuildRequires:  devtoolset-7-gcc-c++
@@ -51,44 +49,49 @@ source /opt/rh/devtoolset-7/enable
 rm -rf %{_builddir}
 mkdir -p %{_builddir}%{_prefix}
 cd %{_builddir}
-cp %{SOURCE0} .
-sh %{SOURCE0} --prefix=%{_builddir}%{_prefix} --exclude-subdir
 
-tar zxf %{SOURCE1} 
-cd %{name}-%{version}
+wget -q https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh \
+    && sh cmake-3.18.0-Linux-x86_64.sh --prefix=%{_builddir}%{_prefix} --exclude-subdir
+
+git clone https://github.com/tdlib/td.git
+cd td 
 mkdir build
 
 %build
 source /opt/rh/devtoolset-7/enable
-cd %{_builddir}/%{name}-%{version}/build
-%{_builddir}%{_bindir}/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_builddir}%{_prefix} ..
-%{_builddir}%{_bindir}/cmake --build . --target install
+cd %{_builddir}/td/build
+%{_builddir}%{_bindir}/cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib64 \
+    -DCMAKE_INSTALL_FULL_LIBDIR=%{_libdir} \
+    -DCMAKE_INSTALL_PREFIX=%{_builddir}%{_prefix} ..
+%{_builddir}%{_bindir}/cmake --build . --target install -j $(grep -c ^processor /proc/cpuinfo)
 
 %install
 rm -rf %{buildroot}
 %{__install} -d %{buildroot}%{_libdir}
-%{__install} -d %{buildroot}%{_libdir}pkgconfig
-%{__install} -d %{buildroot}%{_libdir}cmake/Td
+%{__install} -d %{buildroot}%{_libdir}/pkgconfig
+%{__install} -d %{buildroot}%{_libdir}/cmake/Td
 
 %{__install} -d %{buildroot}%{_includedir}
-%{__install} -d %{buildroot}%{_includedir}td
-%{__install} -d %{buildroot}%{_includedir}td/telegram
-%{__install} -d %{buildroot}%{_includedir}td/tl
+%{__install} -d %{buildroot}%{_includedir}/td
+%{__install} -d %{buildroot}%{_includedir}/td/telegram
+%{__install} -d %{buildroot}%{_includedir}/td/tl
 
-rsync -az %{_builddir}%{_prefix}/lib/ %{buildroot}%{_prefix}/lib/
-rsync -az %{_builddir}%{_prefix}/include/ %{buildroot}%{_includedir}/
+rsync -az %{_builddir}%{_libdir}/ %{buildroot}%{_libdir}/
+rsync -az %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
 
 %files
 %defattr(-,root,root,-)
-%{_prefix}/lib/*.so.*
+%{_libdir}/*.so.*
 %doc
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/%{name}
-%{_prefix}/lib/*.a
-%{_prefix}/lib/*.so
-%{_prefix}/lib/pkgconfig/*.pc
-%{_prefix}/lib/cmake/Td/*.cmake
+%{_libdir}/*.a
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/*.pc
+%{_libdir}/cmake/Td/*.cmake
 %doc
 
 %changelog

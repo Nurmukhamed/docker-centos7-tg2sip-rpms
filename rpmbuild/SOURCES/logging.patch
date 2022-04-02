@@ -1,0 +1,11 @@
+--- logging.h.bak	2022-04-02 17:01:07.472734865 +0600
++++ logging.h	2022-04-02 17:45:06.931132410 +0600
+@@ -20,6 +20,8 @@
+ 
+ #include <spdlog/spdlog.h>
+ #include <spdlog/fmt/ostr.h>
++#include <spdlog/sinks/ostream_sink.h>
++#include <spdlog/sinks/rotating_file_sink.h>
+ #include "settings.h"
+ 
+ #ifndef DISABLE_DEBUG_

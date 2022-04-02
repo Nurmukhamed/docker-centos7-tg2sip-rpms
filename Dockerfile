@@ -22,6 +22,7 @@ RUN yum install -y \
         make \
         git \
         wget \
+        glibc-devel \
         zlib-devel \
         openssl-devel \
         gperf \
