@@ -40,7 +40,7 @@ Requires: libpng
 Requires: libjpeg
 Requires: opus
 Requires: td
-Requires: spdlog
+#Requires: spdlog
 
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -68,13 +68,13 @@ tar zxf %{SOURCE1}
 cd %{name}-%{version}
 
 # fixing package versions
-sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.2 REQUIRED)%" CMakeLists.txt
+sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.0 REQUIRED)%" CMakeLists.txt
 sed -i "s%find_package(spdlog 0.17 REQUIRED)%find_package(spdlog 1.9.2 REQUIRED)%" CMakeLists.txt
 sed -i "s%find_package(spdlog 0.17)%find_package(spdlog 1.9.2)%" ./libtgvoip/CMakeLists.txt
 
 cd tg2sip
+# here we replace logging.h with our file that includes required spdlog libraries.
 cp %{SOURCE4} .
-cat logging.h
 cd ..
 mkdir build
 
@@ -124,6 +124,8 @@ fi
 %attr(755,%{name},%{name}) /lib/systemd/system/%{name}.service
 
 %changelog
+* Sun Apr  3 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.3.0-1
+- spdlog libraries added to logging.h
 * Thu Mar 31 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.3.0-1
 - source to use devtoolset-7
 - less output from rsync, tar command

@@ -6,6 +6,8 @@ Summary:        TDLib (Telegram Database library) is a cross-platform library fo
 License:        GPL-2.0 License
 ExclusiveArch:  x86_64
 URL:            https://github.com/tdlib/td.git
+Source0:        cmake-3.22.3-linux-x86_64.sh       
+Source1:        v1.8.0.tar.gz
 
 BuildRequires:  devtoolset-7-gcc
 BuildRequires:  devtoolset-7-gcc-c++
@@ -50,16 +52,16 @@ rm -rf %{_builddir}
 mkdir -p %{_builddir}%{_prefix}
 cd %{_builddir}
 
-wget -q https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh \
-    && sh cmake-3.18.0-Linux-x86_64.sh --prefix=%{_builddir}%{_prefix} --exclude-subdir
+sh %{SOURCE0} --prefix=%{_builddir}%{_prefix} --exclude-subdir
 
-git clone https://github.com/tdlib/td.git
-cd td 
+tar zxf %{SOURCE1}
+cd %{name}-%{version} 
 mkdir build
 
 %build
 source /opt/rh/devtoolset-7/enable
-cd %{_builddir}/td/build
+cd %{_builddir}/%{name}-%{version}/build
+
 %{_builddir}%{_bindir}/cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib64 \
@@ -95,6 +97,9 @@ rsync -az %{_builddir}%{_includedir}/ %{buildroot}%{_includedir}/
 %doc
 
 %changelog
+* Sun Apr  3 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.8.0-1
+- return to tar gz from git
+- working version
 * Thu Mar 31 2022 Nurmukhamed Artykaly <nurmukhamed.artykaly@hdfilm.kz> 1.8.0-1
 - libdir changed from lib64 to lib
 - less output from rsync, tar command
