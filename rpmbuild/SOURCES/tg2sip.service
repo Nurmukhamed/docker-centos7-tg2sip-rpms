@@ -7,6 +7,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+User=tg2sip
+Group=tg2sip
 WorkingDirectory=/var/lib/tg2sip
 Environment=TG2SIP_STANDARD_FOLDER=YES
 ExecStart=/usr/bin/tg2sip

@@ -90,17 +90,27 @@ RUN yum -y localinstall /root/rpmbuild/RPMS/x86_64/*.rpm
 RUN rpmbuild -bb /root/rpmbuild/SPECS/tg2sip.spec
 
 FROM centos:7 as final
-
 # Update packages
-RUN yum -y update
+RUN yum -y update &&\
+    mkdir -p /var/lib/rpmbuild/RPMS/x86_64
 
-COPY --from=tdlib-build /root/rpmbuild/RPMS/x86_64/td-1.8.0-1.el7.x86_64.rpm /tmp/
-COPY --from=pjproject-build /root/rpmbuild/RPMS/x86_64/pjproject-2.9-1.x86_64.rpm /tmp/
-COPY --from=spdlog-build /root/rpmbuild/RPMS/x86_64/spdlog-devel-1.9.2-1.el7.x86_64.rpm /tmp/
-COPY --from=tg2sip-build /root/rpmbuild/RPMS/x86_64/tg2sip-1.3.0-1.el7.x86_64.rpm /tmp/
+COPY --from=tdlib-build /root/rpmbuild/RPMS/x86_64/td-1.8.0-1.el7.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY --from=tdlib-build /root/rpmbuild/RPMS/x86_64/td-devel-1.8.0-1.el7.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY --from=pjproject-build /root/rpmbuild/RPMS/x86_64/pjproject-2.9-1.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY --from=pjproject-build /root/rpmbuild/RPMS/x86_64/pjproject-devel-2.9-1.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY --from=spdlog-build /root/rpmbuild/RPMS/x86_64/spdlog-devel-1.9.2-1.el7.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY --from=tg2sip-build /root/rpmbuild/RPMS/x86_64/tg2sip-1.3.0-1.el7.x86_64.rpm /var/lib/rpmbuild/RPMS/x86_64/
+COPY copyrpms.sh /usr/local/bin/
 
-RUN yum -y localinstall /tmp/*.rpm
+RUN yum -y localinstall \
+    /var/lib/rpmbuild/RPMS/x86_64/td-1.8.0-1.el7.x86_64.rpm \
+    /var/lib/rpmbuild/RPMS/x86_64/pjproject-2.9-1.x86_64.rpm \
+    /var/lib/rpmbuild/RPMS/x86_64/spdlog-devel-1.9.2-1.el7.x86_64.rpm \
+    /var/lib/rpmbuild/RPMS/x86_64/tg2sip-1.3.0-1.el7.x86_64.rpm &&\
+    find /var/lib/rpmbuild -type d -exec chmod 755 {} \; &&\
+    find /var/lib/rpmbuild -type f -exec chmod 644 {} \; &&\
+    chmod +x /usr/local/bin/copyrpms.sh 
 
-USER 288:288
+#USER 288:288
 WORKDIR /var/lib/tg2sip
 CMD ["/usr/bin/tg2sip"]
