@@ -10,5 +10,5 @@ git clone https://github.com/Nurmukhamed/docker-centos7-tg2sip-rpms
 cd docker-centos7-tg2sip-rpms
 docker build -t tg2siprpms .
 mkdir rpms
-docker run -v $(pwd)/rpms:/rpms tg2siprpms /usr/local/copyrpms.sh
+docker run -v $(pwd)/rpms:/rpms --env USERID=$(id -u) --env GROUPID=$(id -g) tg2siprpms /usr/local/bin/copyrpms.sh
 ```
