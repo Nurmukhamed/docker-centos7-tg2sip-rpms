@@ -84,7 +84,7 @@ COPY --from=tdlib-build /root/rpmbuild/RPMS/x86_64/td-devel-1.8.0-1.el7.x86_64.r
 COPY --from=pjproject-build /root/rpmbuild/RPMS/x86_64/pjproject-2.9-1.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
 COPY --from=pjproject-build /root/rpmbuild/RPMS/x86_64/pjproject-devel-2.9-1.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
 COPY --from=spdlog-build /root/rpmbuild/RPMS/x86_64/spdlog-devel-1.9.2-1.el7.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
-
+COPY CMakeLists.txt /root/rpmbuild/SOURCES 
 RUN yum -y localinstall /root/rpmbuild/RPMS/x86_64/*.rpm 
 
 RUN rpmbuild -bb /root/rpmbuild/SPECS/tg2sip.spec

@@ -66,7 +66,7 @@ sh %{SOURCE0} --prefix=%{_builddir}/usr --exclude-subdir
 
 tar zxf %{SOURCE1}
 cd %{name}-%{version}
-
+cp %{SOURCE2} .
 # fixing package versions
 sed -i "s%find_package(Td 1.7.10 REQUIRED)%find_package(Td 1.8.0 REQUIRED)%" CMakeLists.txt
 sed -i "s%find_package(spdlog 0.17 REQUIRED)%find_package(spdlog 1.9.2 REQUIRED)%" CMakeLists.txt
